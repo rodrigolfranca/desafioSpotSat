@@ -3,6 +3,7 @@ const app = express();
 
 const pointRouter = require('./src/routers/pointRouter.js');
 const polygonRouter = require('./src/routers/polygonRouter.js');
+const searchRouter = require('./src/routers/searchRouter.js');
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
@@ -11,6 +12,7 @@ app.use(bodyParser.json());
 // setting routers
 app.use('/points/', pointRouter);
 app.use('/polygons/', polygonRouter);
+app.use('/search/', searchRouter);
 
 app.listen(3000, ()=>{
     console.log('o servidor está online na porta 3000');
