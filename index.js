@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 // setting routers
 app.use('/points/', pointRouter);
-app.use('/polygon/', polygonRouter);
+app.use('/polygons/', polygonRouter);
 
 app.listen(3000, ()=>{
     console.log('o servidor está online na porta 3000');
