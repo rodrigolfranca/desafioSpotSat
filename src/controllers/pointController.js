@@ -40,6 +40,36 @@ const pointController = {
             });
         }
     },
+    getDistance: async (req, res) => {
+        console.log('Points Controller: Distance Between');
+        const {id1, id2} = req.body;
+        try {
+            const data = await pointService.getDistance(id1, id2);
+            // eslint-disable-next-line max-len
+            if (!data) return res.status(400).json({'message': 'non-existent id'});
+            return res.status(200).json(data);
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Controller Error: failed access to database',
+                err: err,
+            });
+        }
+    },
+    isIn: async (req, res) => {
+        console.log('Points Controller: Point in Polygon?');
+        const {idPoint, idPolygon} = req.body;
+        try {
+            const data = await pointService.isIn(idPoint, idPolygon);
+            // eslint-disable-next-line max-len
+            if (!data) return res.status(400).json({'message': 'is out or non-exist'});
+            return res.status(200).json({'message': 'is in'});
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Controller Error: failed access to database',
+                err: err,
+            });
+        }
+    },
     updateUnique: async (req, res) => {
         console.log('Points Controller: Updating one');
         const {id} = req.body;

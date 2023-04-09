@@ -81,6 +81,19 @@ const polygonController = {
             });
         }
     },
+    search: async (req, res) => {
+        console.log('Polygons Controller: Search Points inside');
+        const {id} = req.params;
+        try {
+            const data = await polygonService.search(id);
+            return res.status(200).json(data);
+        } catch (err) {
+            return res.status(500).json({
+                message: 'Controller Error: failed access to database',
+                err: err,
+            });
+        }
+    },
 };
 
 module.exports = polygonController;

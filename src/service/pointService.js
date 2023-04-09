@@ -39,8 +39,41 @@ pointService = {
         console.log('Service: Posting One');
         const query = `
         INSERT INTO points (name, geom)
-        VALUES ($1, ST_GeomFromGeoJSON($2));`;
+        VALUES ($1, ST_GeomFromGeoJSON($2))
+        RETURNING *;`;
         const values = [name, geom];
+        try {
+            const data = await pool.query(query, values);
+            return data.rows[0];
+        } catch (err) {
+            throw err;
+        }
+    },
+    getDistance: async (id1, id2) => {
+        console.log('Service: selecting distance');
+        const query = `
+        SELECT ST_DISTANCE(
+            ST_Transform(p1.geom, 2163),
+            ST_Transform(p2.geom, 2163))
+        AS distance_in_meters
+        FROM points p1, points p2
+        WHERE p1.id = $1 AND p2.id = $2;`;
+        const values = [id1, id2];
+        try {
+            const data = await pool.query(query, values);
+            return data.rows[0];
+        } catch (err) {
+            throw err;
+        }
+    },
+    isIn: async (idPoint, idPolygon)=>{
+        console.log('Service: point in polygon');
+        const query = `
+        SELECT ST_Contains(polygon.geom, point.geom)
+        AS esta_no_lugar
+        FROM points point, polygons polygon
+        WHERE point.id=$2 AND polygon.id=$1;`;
+        const values = [idPoint, idPolygon];
         try {
             const data = await pool.query(query, values);
             return data.rows[0];

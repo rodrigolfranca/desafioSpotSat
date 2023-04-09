@@ -77,6 +77,32 @@ polygonService = {
             throw err;
         }
     },
+    search: async (id) => {
+        console.log('Service: Checking Points in a Polygon');
+        const query = `
+        SELECT
+        json_build_object(
+            'type', 'FeatureCollection',
+            'features', json_agg(
+                json_build_object(
+                    'type', 'Feature',
+                    'geometry', ST_AsGeoJSON(geom)::json,
+                    'properties', json_build_object('name', name)
+                )
+            )
+        ) AS geojson
+        FROM points
+        WHERE ST_Contains(
+            (SELECT geom FROM polygons WHERE id = $1),
+            points.geom);`;
+        const values = [id];
+        try {
+            const data = await pool.query(query, values);
+            return data.rows;
+        } catch (err) {
+            throw err;
+        }
+    },
 };
 
 
