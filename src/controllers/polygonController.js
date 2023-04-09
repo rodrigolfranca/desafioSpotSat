@@ -2,10 +2,10 @@ const polygonService = require('../service/polygonService');
 
 const polygonController = {
 
-    getAll: async (req, res) => {
+    list: async (req, res) => {
         console.log('Polygons Controller: List');
         try {
-            const data = await polygonService.selectAll();
+            const data = await polygonService.list();
             return res.status(200).json(data);
         } catch (err) {
             return res.status(500).json({
@@ -14,11 +14,11 @@ const polygonController = {
             });
         }
     },
-    getUnique: async (req, res) => {
+    view: async (req, res) => {
         console.log('Polygons Controller: View');
         try {
             const {id} = req.params;
-            const data = await polygonService.selectOne(id);
+            const data = await polygonService.view(id);
             return res.status(200).json(data);
         } catch (err) {
             return res.status(500).json({
@@ -26,12 +26,12 @@ const polygonController = {
                 err: err});
         }
     },
-    postNew: async (req, res) => {
+    create: async (req, res) => {
         console.log('Polygons Controller: Create');
         const name = req.body.geojson.features[0].properties.name;
         const geom = req.body.geojson.features[0].geometry;
         try {
-            const data = await polygonService.insertOne(name, geom);
+            const data = await polygonService.create(name, geom);
             return res.status(201).json(data);
         } catch (err) {
             return res.status(500).json({
@@ -40,16 +40,16 @@ const polygonController = {
             });
         }
     },
-    updateUnique: async (req, res) => {
+    update: async (req, res) => {
         console.log('Polygons Controller: Updating one');
         const {id} = req.body;
         const name = req.body.geojson.features[0].properties.name;
         const geom = req.body.geojson.features[0].geometry;
         try {
-            const data = await polygonService.selectOne(id);
+            const data = await polygonService.view(id);
             if (data.geojson.features[0] !== req.body.geojson.features[0]) {
                 try {
-                    const novo = await polygonService.updateOne(id, name, geom);
+                    const novo = await polygonService.update(id, name, geom);
                     return res.status(200).json(novo);
                 } catch (err) {
                     return res.status(500).json({
@@ -68,11 +68,11 @@ const polygonController = {
                 err: err});
         }
     },
-    deleteUnique: async (req, res) => {
+    delete: async (req, res) => {
         console.log('Polygons Controller: Delete');
         const {id} = req.body;
         try {
-            data = polygonService.deleteOne(id);
+            data = polygonService.delete(id);
             return res.status(200).json({message: 'Polygon deleted'});
         } catch (err) {
             return res.status(500).json({
@@ -81,6 +81,7 @@ const polygonController = {
             });
         }
     },
+    // busca lugares(pontos) dentro de uma área(poligono)
     search: async (req, res) => {
         console.log('Polygons Controller: Search Points inside');
         const {id} = req.params;

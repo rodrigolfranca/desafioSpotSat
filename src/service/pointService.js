@@ -1,8 +1,8 @@
 const pool = require('../database/connection');
 
-pointService = {
+const pointService = {
 
-    selectAll: async () => {
+    list: async () => {
         console.log('Service: Selecting All');
         const query = `
         SELECT id, name, ST_AsGeoJSON(geom)::json as geom
@@ -14,7 +14,7 @@ pointService = {
             throw err;
         }
     },
-    selectOne: async (id) => {
+    view: async (id) => {
         console.log('Service: Selecting one');
         const query = `
         SELECT json_build_object(
@@ -35,13 +35,42 @@ pointService = {
             throw err;
         }
     },
-    insertOne: async (name, geom) => {
+    create: async (name, geom) => {
         console.log('Service: Posting One');
         const query = `
         INSERT INTO points (name, geom)
         VALUES ($1, ST_GeomFromGeoJSON($2))
         RETURNING *;`;
         const values = [name, geom];
+        try {
+            const data = await pool.query(query, values);
+            return data.rows[0];
+        } catch (err) {
+            throw err;
+        }
+    },
+    update: async (id, name, geom) => {
+        console.log('Service: Updating One');
+        const query = `
+        UPDATE points
+        SET name = $1, geom = ST_GeomFromGeoJSON($2)
+        WHERE id = $3
+        RETURNING *;`;
+        const values = [name, geom, id];
+        try {
+            const data = await pool.query(query, values);
+            return data.rows[0];
+        } catch (err) {
+            throw err;
+        }
+    },
+    delete: async (id) => {
+        console.log('Service: Deleting One');
+        const query = `
+        DELETE FROM points
+        WHERE id = $1
+        RETURNING *;`;
+        const values = [id];
         try {
             const data = await pool.query(query, values);
             return data.rows[0];
@@ -81,37 +110,7 @@ pointService = {
             throw err;
         }
     },
-    updateOne: async (id, name, geom) => {
-        console.log('Service: Updating One');
-        const query = `
-        UPDATE points
-        SET name = $1, geom = ST_GeomFromGeoJSON($2)
-        WHERE id = $3
-        RETURNING *;`;
-        const values = [name, geom, id];
-        try {
-            const data = await pool.query(query, values);
-            return data.rows[0];
-        } catch (err) {
-            throw err;
-        }
-    },
-    deleteOne: async (id) => {
-        console.log('Service: Deleting One');
-        const query = `
-        DELETE FROM points
-        WHERE id = $1
-        RETURNING *;`;
-        const values = [id];
-        try {
-            const data = await pool.query(query, values);
-            return data.rows[0];
-        } catch (err) {
-            throw err;
-        }
-    },
+
 };
 
-
 module.exports = pointService;
-

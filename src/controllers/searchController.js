@@ -3,6 +3,7 @@ const searchService = require('../service/searchService');
 
 const searchController = {
 
+    // encontra lugares e areas dentro de um circulo, dado seu centro e rádio
     findEntities: async (req, res) => {
         console.log('Search Controller: List');
         const {lat, lon, radius} = req.body;
@@ -16,6 +17,7 @@ const searchController = {
             });
         }
     },
+
 };
 
 

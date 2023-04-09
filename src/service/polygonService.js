@@ -2,7 +2,7 @@ const pool = require('../database/connection');
 
 polygonService = {
 
-    selectAll: async () => {
+    list: async () => {
         console.log('Service: Selecting All');
         const query = `
         SELECT id, name, ST_AsGeoJSON(geom)::json as geom
@@ -14,7 +14,7 @@ polygonService = {
             throw err;
         }
     },
-    selectOne: async (id) => {
+    view: async (id) => {
         console.log('Service: Selecting one');
         const query = `
         SELECT json_build_object(
@@ -35,7 +35,7 @@ polygonService = {
             throw err;
         }
     },
-    insertOne: async (name, geom) => {
+    create: async (name, geom) => {
         console.log('Service: Posting One');
         const query = `
         INSERT INTO polygons (name, geom)
@@ -48,7 +48,7 @@ polygonService = {
             throw err;
         }
     },
-    updateOne: async (id, name, geom) => {
+    update: async (id, name, geom) => {
         console.log('Service: Updating One');
         const query = `
         UPDATE polygons
@@ -63,7 +63,7 @@ polygonService = {
             throw err;
         }
     },
-    deleteOne: async (id) => {
+    delete: async (id) => {
         console.log('Service: Deleting One');
         const query = `
         DELETE FROM polygons
