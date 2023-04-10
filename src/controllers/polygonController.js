@@ -73,7 +73,7 @@ const polygonController = {
         const {id} = req.body;
         try {
             data = polygonService.delete(id);
-            return res.status(200).json({message: 'Polygon deleted'});
+            return res.status(204).json();
         } catch (err) {
             return res.status(500).json({
                 message: 'Controller Error: failed access to database',

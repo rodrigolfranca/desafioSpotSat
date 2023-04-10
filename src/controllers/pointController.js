@@ -20,6 +20,9 @@ const pointController = {
         try {
             const {id} = req.params;
             const data = await pointService.view(id);
+            if (!data.geojson.features) {
+                return res.status(400).json({'message': 'non-existent ID'});
+            }
             return res.status(200).json(data);
         } catch (err) {
             return res.status(500).json({
@@ -74,7 +77,7 @@ const pointController = {
         const {id} = req.body;
         try {
             data = pointService.delete(id);
-            return res.status(200).json({message: 'Point deleted'});
+            return res.status(204).json();
         } catch (err) {
             return res.status(500).json({
                 message: 'Controller Error: failed access to database',

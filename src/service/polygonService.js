@@ -5,7 +5,20 @@ polygonService = {
     list: async () => {
         console.log('Service: Selecting All');
         const query = `
-        SELECT id, name, ST_AsGeoJSON(geom)::json as geom
+        SELECT
+        json_build_object(
+            'type', 'FeatureCollection',
+            'features', json_agg(
+                json_build_object(
+                    'type', 'Feature',
+                    'geometry', ST_AsGeoJSON(geom)::json,
+                    'properties', json_build_object(
+                        'id', id,
+                        'name', name                        
+                    )
+                )
+            )
+        ) AS geojson
         FROM polygons;`;
         try {
             const data = await pool.query(query);
@@ -39,7 +52,8 @@ polygonService = {
         console.log('Service: Posting One');
         const query = `
         INSERT INTO polygons (name, geom)
-        VALUES ($1, ST_GeomFromGeoJSON($2));`;
+        VALUES ($1, ST_GeomFromGeoJSON($2))
+        RETURNING id;`;
         const values = [name, geom];
         try {
             const data = await pool.query(query, values);
@@ -54,7 +68,7 @@ polygonService = {
         UPDATE polygons
         SET name = $1, geom = ST_GeomFromGeoJSON($2)
         WHERE id = $3
-        RETURNING *;`;
+        RETURNING id;`;
         const values = [name, geom, id];
         try {
             const data = await pool.query(query, values);
@@ -87,7 +101,7 @@ polygonService = {
                 json_build_object(
                     'type', 'Feature',
                     'geometry', ST_AsGeoJSON(geom)::json,
-                    'properties', json_build_object('name', name)
+                    'properties', json_build_object('name', name, 'id', id)
                 )
             )
         ) AS geojson

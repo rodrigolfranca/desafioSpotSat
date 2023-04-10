@@ -4,7 +4,6 @@ require('dotenv').config(__dirname+'../../');
 
 const jwtChecker = (req, res, next) => {
     console.log('Middleware: Checando token');
-    console.log(req);
 
     try {
         const jwtdata = jwt.verify(
