@@ -34,6 +34,17 @@ npm install
 npm start
 ```
 Na raiz do projeto.
+
+adicione o .env na raiz do projeto com:
+
+    DATABASE_USER='postgres'
+    DATABASE_PASSWORD='123'
+    DATABASE_NAME='SpotSat_Challenge'
+    DATABASE_HOST='localhost'
+    DATABASE_PORT='5432'
+    JWT_THE_SECRET='4!f!e@1FR1231F12341DAsdqwe121cWSD12'
+
+
 <br>
 # Rotas
 
