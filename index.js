@@ -8,6 +8,9 @@ app.use(bodyParser.json());
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
+const cors = require('cors');
+app.use(cors(({origin: true, credentials: true})));
+
 const pointRouter = require('./src/routers/pointRouter');
 const polygonRouter = require('./src/routers/polygonRouter');
 const searchRouter = require('./src/routers/searchRouter');
