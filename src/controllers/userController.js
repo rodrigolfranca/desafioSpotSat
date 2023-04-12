@@ -20,10 +20,10 @@ const userController = {
                 });
                 res.status(200).json({'message': 'Logged in'});
             } else {
-                res.status(400).json({'message': 'Wrong E-mail'});
+                res.status(400).json({'message': 'Wrong Password'});
             }
         } catch (err) {
-            res.status(400).json({message: 'Wrong Password'});
+            res.status(400).json({message: 'Wrong E-mail'});
         }
     },
 };

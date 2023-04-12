@@ -9,40 +9,25 @@ Nesta parte você deve implementar um CRUD completo para lugares (nome + ponto) 
 ## Pra rodar
 <br>
 
-## database
 
-Pra montar o banco de dados existem duas opções:
-
-1 - Instala postgresql e postgis, dentro do postgresql cria uma database com o nome "SpotSat_Challenge" e roda o arquivo 'init.sql' que esta na pasta /database/
-
-2 - Usa o Dockerfile que ta na pasta database pra criar uma imagem e um container com o Docker:
-
-```bash
-docker build -t spotsatdb .
-```
-e
-
-```bash
-docker run --name spotsatdbcontainer -p 5432:5432 -d spotsatdb
-```
-<br>
-
-## API
-
-```bash
-npm install
-npm start
-```
-Na raiz do projeto.
-
-adicione o .env na raiz do projeto com:
+Adicione o .env na raiz do projeto com:
 
     DATABASE_USER='postgres'
     DATABASE_PASSWORD='123'
     DATABASE_NAME='SpotSat_Challenge'
-    DATABASE_HOST='localhost'
+    DATABASE_HOST='spotsatwebdbcontainer'
     DATABASE_PORT='5432'
     JWT_THE_SECRET='4!f!e@1FR1231F12341DAsdqwe121cWSD12'
+
+Rode os seguintes comandos:
+
+    docker network create spotsatweb
+
+    docker build -t spotsatwebback .
+
+    docker run --name spotsatwebbackcontainer -p 3000:3000 -d --network spotsatweb spotsatwebback
+
+
 
 
 <br>
